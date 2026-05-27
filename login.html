@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login · Yadhav Finance Dashboard</title>
+    <link rel="icon" href="image.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="login-wrap">
+        <div class="login-card">
+            <div class="login-logo">
+                <img src="image.png" alt="Yadhav Finance logo" />
+                <div>
+                    <div class="brand-name">Yadhav Finance</div>
+                    <div class="brand-domain"></div>
+                </div>
+            </div>
+            <div class="login-title">Welcome back</div>
+            <div class="login-sub">Sign in to manage your freelance finances.</div>
+            <form id="login-form">
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="Enter email" required />
+                </div>
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Enter password" required />
+                </div>
+                <button class="btn btn-primary btn-block" type="submit" id="submit-btn">
+                    <span id="btn-label">Sign in</span>
+                </button>
+                <div id="login-msg" style="margin-top:14px;font-size:13px;color:var(--text-muted);text-align:center;">
+                </div>
+            </form>
+            <div style="margin-top:24px;font-size:12px;color:var(--text-muted);text-align:center;">
+                Owner: Yadhav Sreekanth
+            </div>
+        </div>
+    </div>
+    <div class="toast-wrap" id="toasts"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/toast.js"></script>
+    <script>
+        const form = document.getElementById('login-form');
+        const msg = document.getElementById('login-msg');
+        const btn = document.getElementById('submit-btn');
+        const btnLabel = document.getElementById('btn-label');
+
+        (async () => {
+            const { data } = await window.sb.auth.getSession();
+            if (data.session) window.location.replace('/app.html');
+        })();
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            btn.disabled = true;
+            btnLabel.innerHTML = '<span class="loader"></span>';
+            msg.textContent = '';
+
+            let { data, error } = await window.sb.auth.signInWithPassword({ email, password });
+
+            // Bootstrap the admin account once if it doesn't exist yet.
+            if (error && /invalid login credentials/i.test(error.message) && email.toLowerCase() === '') {
+                const signup = await window.sb.auth.signUp({
+                    email, password,
+                    options: { data: { full_name: 'Yadhav Sreekanth' } }
+                });
+                if (!signup.error) {
+                    const retry = await window.sb.auth.signInWithPassword({ email, password });
+                    data = retry.data; error = retry.error;
+                } else {
+                    error = signup.error;
+                }
+            }
+
+            if (error) {
+                msg.textContent = error.message;
+                showToast(error.message, 'error');
+                btn.disabled = false;
+                btnLabel.textContent = 'Sign in';
+                return;
+            }
+            showToast('Welcome back, Yadhav 👋', 'success');
+            setTimeout(() => window.location.replace('/app.html'), 400);
+        });
+    </script>
+</body>
+
+</html>

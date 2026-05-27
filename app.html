@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yadhav Finance Dashboard</title>
+    <link rel="icon" type="image/png" href="image.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="page-loader" id="page-loader">
+        <div style="text-align:center">
+            <img src="image.png" alt=""
+                style="width:64px;height:64px;filter:drop-shadow(0 6px 20px rgba(109,92,255,0.5));animation:wave 1.4s ease infinite" />
+            <div style="margin-top:14px;font-weight:600;color:var(--text-muted)">Loading your finances…</div>
+        </div>
+    </div>
+
+    <div class="sidebar-backdrop" id="sb-backdrop"></div>
+    <div class="app">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <img src="image.png" alt="Yadhav Finance" />
+                <div>
+                    <h1>Yadhav Finance</h1>
+                    <small><a href="https://yadhav.website" target="_blank">&nbsp;Website Link</a></small>
+                </div>
+            </div>
+            <div class="nav-item active" data-view="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div>
+            <div class="nav-item" data-view="earnings"><i data-lucide="trending-up"></i> Earnings</div>
+            <div class="nav-item" data-view="expenses"><i data-lucide="wallet"></i> Expenses</div>
+            <div class="nav-item" data-view="analytics"><i data-lucide="bar-chart-3"></i> Analytics</div>
+            <div class="nav-item" data-view="clients"><i data-lucide="users"></i> Clients</div>
+            <div class="nav-item" data-view="projects"><i data-lucide="folder-kanban"></i> Projects</div>
+            <div class="nav-item" data-view="settings"><i data-lucide="settings"></i> Settings</div>
+            <div class="sidebar-footer">
+                <div class="nav-item" id="logout-btn"><i data-lucide="log-out"></i> Sign out</div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <div class="topbar">
+                <button class="icon-btn mobile-toggle" id="mobile-menu"><i data-lucide="menu"></i></button>
+                <span class="domain"><i data-lucide="globe" style="width:14px;height:14px"></i> <a href="https://yadhav.website" target="_blank">&nbsp;Website Link</a></span>
+                <div class="spacer"></div>
+                <button class="icon-btn" id="export-pdf" title="Export PDF"><i data-lucide="file-down"></i></button>
+                <button class="icon-btn" id="export-xls" title="Export CSV"><i data-lucide="sheet"></i></button>
+                <button class="icon-btn" id="notif-btn" title="Notifications"><i data-lucide="bell"></i><span
+                        class="dot"></span></button>
+                <button class="icon-btn" id="theme-toggle" title="Toggle theme"><i data-lucide="moon"></i></button>
+                <div class="avatar" id="avatar-btn">YS</div>
+            </div>
+
+            <!-- DASHBOARD -->
+            <section class="section active" id="view-dashboard">
+                <div class="hero">
+                    <h2>Hello, Yadhav Sreekanth <span class="wave">👋</span></h2>
+                    <p>Manage your freelance income, projects, and expenses beautifully.</p>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="stat-card" style="--accent-grad: var(--grad-success)">
+                        <div class="glow"></div>
+                        <div class="label">Total Money Earned</div>
+                        <div class="value" id="stat-earned">₹0</div>
+                        <div class="meta"><i data-lucide="arrow-up-right"
+                                style="width:14px;height:14px;color:var(--success)"></i> Lifetime income</div>
+                        <div class="icon-pill"><i data-lucide="trending-up"></i></div>
+                    </div>
+                    <div class="stat-card" style="--accent-grad: var(--grad-danger)">
+                        <div class="glow"></div>
+                        <div class="label">Total Money Spent</div>
+                        <div class="value" id="stat-spent">₹0</div>
+                        <div class="meta"><i data-lucide="arrow-down-right"
+                                style="width:14px;height:14px;color:var(--danger)"></i> All expenses</div>
+                        <div class="icon-pill"><i data-lucide="wallet"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="glow"></div>
+                        <div class="label">Balance After Spending</div>
+                        <div class="value" id="stat-balance">₹0</div>
+                        <div class="meta"><i data-lucide="piggy-bank" style="width:14px;height:14px"></i> Earned − Spent
+                        </div>
+                        <div class="icon-pill"><i data-lucide="piggy-bank"></i></div>
+                    </div>
+                    <div class="stat-card" style="--accent-grad: var(--grad-warm)">
+                        <div class="glow"></div>
+                        <div class="label">Total Clients</div>
+                        <div class="value" id="stat-clients">0</div>
+                        <div class="meta"><i data-lucide="users" style="width:14px;height:14px"></i> Unique clients
+                        </div>
+                        <div class="icon-pill"><i data-lucide="users"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="glow"></div>
+                        <div class="label">Total Orders</div>
+                        <div class="value" id="stat-orders">0</div>
+                        <div class="meta"><i data-lucide="package" style="width:14px;height:14px"></i> Earnings entries
+                        </div>
+                        <div class="icon-pill"><i data-lucide="package"></i></div>
+                    </div>
+                    <div class="stat-card" style="--accent-grad: var(--grad-success)">
+                        <div class="glow"></div>
+                        <div class="label">Monthly Earnings</div>
+                        <div class="value" id="stat-month">₹0</div>
+                        <div class="meta"><i data-lucide="calendar" style="width:14px;height:14px"></i> This month</div>
+                        <div class="icon-pill"><i data-lucide="calendar"></i></div>
+                    </div>
+                </div>
+
+                <div class="panels">
+                    <div class="panel">
+                        <h3><i data-lucide="activity" style="width:18px;height:18px;color:var(--primary)"></i> Earnings
+                            vs Expenses (last 6 months) <span class="tag" id="trend-tag"></span></h3>
+                        <div class="chart-box"><canvas id="chart-overview"></canvas></div>
+                    </div>
+                    <div class="panel">
+                        <h3><i data-lucide="zap" style="width:18px;height:18px;color:var(--primary)"></i> Quick actions
+                        </h3>
+                        <div class="quick-actions">
+                            <button class="qa-btn" data-action="add-earning"><i data-lucide="plus-circle"></i> Add
+                                Earning</button>
+                            <button class="qa-btn" data-action="add-expense"><i data-lucide="minus-circle"></i> Add
+                                Expense</button>
+                            <button class="qa-btn" data-action="add-note"><i data-lucide="sticky-note"></i> New
+                                Note</button>
+                            <button class="qa-btn" data-action="view-clients"><i data-lucide="users"></i>
+                                Clients</button>
+                        </div>
+                        <h3 style="margin-top:22px"><i data-lucide="sparkles"
+                                style="width:18px;height:18px;color:var(--primary)"></i> Motivation</h3>
+                        <div class="quote-card">
+                            <div class="q" id="quote-text">Money grows on the tree of persistence.</div>
+                            <div class="a" id="quote-author">— Japanese Proverb</div>
+                        </div>
+                        <h3 style="margin-top:22px"><i data-lucide="calendar-days"
+                                style="width:18px;height:18px;color:var(--primary)"></i> Calendar</h3>
+                        <div class="calendar" id="calendar"></div>
+                    </div>
+                </div>
+
+                <div class="panels" style="margin-top:18px">
+                    <div class="panel">
+                        <h3><i data-lucide="receipt" style="width:18px;height:18px;color:var(--primary)"></i> Recent
+                            transactions <span class="tag">latest 8</span></h3>
+                        <div id="recent-list"></div>
+                    </div>
+                    <div class="panel">
+                        <h3><i data-lucide="sticky-note" style="width:18px;height:18px;color:var(--primary)"></i> Notes
+                            <button class="btn btn-sm btn-ghost" style="margin-left:auto" id="add-note-quick"><i
+                                    data-lucide="plus" style="width:14px;height:14px"></i> Add</button></h3>
+                        <div class="note-list" id="notes-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EARNINGS -->
+            <section class="section" id="view-earnings">
+                <div class="section-head">
+                    <h2>Earnings</h2>
+                    <div class="spacer"></div>
+                    <div class="search"><i data-lucide="search"
+                            style="width:16px;height:16px;color:var(--text-muted)"></i><input id="search-earnings"
+                            placeholder="Search earnings…" /></div>
+                    <button class="btn btn-primary" id="open-earning"><i data-lucide="plus"></i> Add Earning</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Client / Source</th>
+                                <th>Detail</th>
+                                <th style="text-align:right">Amount</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="earnings-tbody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- EXPENSES -->
+            <section class="section" id="view-expenses">
+                <div class="section-head">
+                    <h2>Expenses</h2>
+                    <div class="spacer"></div>
+                    <div class="search"><i data-lucide="search"
+                            style="width:16px;height:16px;color:var(--text-muted)"></i><input id="search-expenses"
+                            placeholder="Search expenses…" /></div>
+                    <button class="btn btn-primary" id="open-expense"><i data-lucide="plus"></i> Add Expense</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Category</th>
+                                <th>Name</th>
+                                <th>Notes</th>
+                                <th style="text-align:right">Amount</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenses-tbody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ANALYTICS -->
+            <section class="section" id="view-analytics">
+                <div class="section-head">
+                    <h2>Analytics</h2>
+                </div>
+                <div class="cards-grid">
+                    <div class="stat-card" style="--accent-grad: var(--grad-success)">
+                        <div class="glow"></div>
+                        <div class="label">Top earning category</div>
+                        <div class="value" id="an-top-cat" style="font-size:22px">—</div>
+                        <div class="meta" id="an-top-cat-amt"></div>
+                        <div class="icon-pill"><i data-lucide="award"></i></div>
+                    </div>
+                    <div class="stat-card" style="--accent-grad: var(--grad-warm)">
+                        <div class="glow"></div>
+                        <div class="label">Avg monthly earnings</div>
+                        <div class="value" id="an-avg-month">₹0</div>
+                        <div class="meta">Last 6 months</div>
+                        <div class="icon-pill"><i data-lucide="line-chart"></i></div>
+                    </div>
+                    <div class="stat-card" style="--accent-grad: var(--grad-danger)">
+                        <div class="glow"></div>
+                        <div class="label">Biggest spend category</div>
+                        <div class="value" id="an-big-spend" style="font-size:22px">—</div>
+                        <div class="meta" id="an-big-spend-amt"></div>
+                        <div class="icon-pill"><i data-lucide="flame"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="glow"></div>
+                        <div class="label">Savings rate</div>
+                        <div class="value" id="an-savings">0%</div>
+                        <div class="meta">Balance ÷ Earned</div>
+                        <div class="icon-pill"><i data-lucide="percent"></i></div>
+                    </div>
+                </div>
+                <div class="charts-grid">
+                    <div class="panel">
+                        <h3><i data-lucide="trending-up" style="width:18px;height:18px;color:var(--primary)"></i>
+                            Earnings trend</h3>
+                        <div class="chart-box"><canvas id="chart-earnings"></canvas></div>
+                    </div>
+                    <div class="panel">
+                        <h3><i data-lucide="pie-chart" style="width:18px;height:18px;color:var(--primary)"></i> Earnings
+                            by type</h3>
+                        <div class="chart-box"><canvas id="chart-earn-type"></canvas></div>
+                    </div>
+                </div>
+                <div class="charts-grid" style="margin-top:18px">
+                    <div class="panel">
+                        <h3><i data-lucide="trending-down" style="width:18px;height:18px;color:var(--primary)"></i>
+                            Spending trend</h3>
+                        <div class="chart-box"><canvas id="chart-spending"></canvas></div>
+                    </div>
+                    <div class="panel">
+                        <h3><i data-lucide="pie-chart" style="width:18px;height:18px;color:var(--primary)"></i> Spending
+                            by category</h3>
+                        <div class="chart-box"><canvas id="chart-spend-cat"></canvas></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CLIENTS -->
+            <section class="section" id="view-clients">
+                <div class="section-head">
+                    <h2>Clients</h2>
+                    <div class="spacer"></div>
+                    <div class="search"><i data-lucide="search"
+                            style="width:16px;height:16px;color:var(--text-muted)"></i><input id="search-clients"
+                            placeholder="Search clients…" /></div>
+                </div>
+                <div class="cards-row" id="clients-grid"></div>
+            </section>
+
+            <!-- PROJECTS -->
+            <section class="section" id="view-projects">
+                <div class="section-head">
+                    <h2>Projects</h2>
+                </div>
+                <div class="cards-row" id="projects-grid"></div>
+            </section>
+
+            <!-- SETTINGS -->
+            <section class="section" id="view-settings">
+                <div class="section-head">
+                    <h2>Profile settings</h2>
+                </div>
+                <div class="panel" style="max-width:600px">
+                    <div class="field"><label>Full name</label><input id="pf-name" /></div>
+                    <div class="field"><label>Email</label><input id="pf-email" disabled /></div>
+                    <div class="field"><label>Currency</label><input value="Indian Rupees (₹)" disabled /></div>
+                    <div class="field"><label>Domain</label> <a href="https://yadhav.website">&nbsp;Website Link</a></div>
+                    <button class="btn btn-primary" id="save-profile">Save changes</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-backdrop" id="modal-earning">
+        <div class="modal">
+            <div class="modal-head">
+                <h3>Add earning</h3><button class="icon-btn" data-close><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="field"><label>Earning type</label>
+                    <select id="e-type">
+                        <option value="web_development">Web Development</option>
+                        <option value="powerpoint_design">PowerPoint Design</option>
+                        <option value="poster_design">Poster Design</option>
+                        <option value="pocket_money">Pocket Money</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div id="e-fields"></div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn" data-close>Cancel</button>
+                <button class="btn btn-primary" id="save-earning">Save earning</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="modal-expense">
+        <div class="modal">
+            <div class="modal-head">
+                <h3>Add expense</h3><button class="icon-btn" data-close><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="grid-2">
+                    <div class="field"><label>Category</label><select id="x-cat">
+                            <option value="food">Food</option>
+                            <option value="travel">Travel</option>
+                            <option value="gadgets">Gadgets</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="subscriptions">Subscriptions</option>
+                            <option value="education">Education</option>
+                            <option value="bills">Bills</option>
+                            <option value="other">Other</option>
+                        </select></div>
+                    <div class="field"><label>Amount (₹)</label><input id="x-amount" type="number" min="0" step="1" />
+                    </div>
+                </div>
+                <div class="field"><label>Expense name</label><input id="x-name" /></div>
+                <div class="field"><label>Date</label><input id="x-date" type="date" /></div>
+                <div class="field"><label>Notes</label><textarea id="x-notes"></textarea></div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn" data-close>Cancel</button>
+                <button class="btn btn-primary" id="save-expense">Save expense</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="modal-note">
+        <div class="modal">
+            <div class="modal-head">
+                <h3>New note</h3><button class="icon-btn" data-close><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="field"><label>Title</label><input id="n-title" /></div>
+                <div class="field"><label>Content</label><textarea id="n-content"></textarea></div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn" data-close>Cancel</button>
+                <button class="btn btn-primary" id="save-note">Save note</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="modal-client">
+        <div class="modal">
+            <div class="modal-head">
+                <h3 id="client-title">Client</h3><button class="icon-btn" data-close><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body" id="client-body"></div>
+            <div class="modal-foot"><button class="btn" data-close>Close</button></div>
+        </div>
+    </div>
+
+    <div class="toast-wrap" id="toasts"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="/js/config.js"></script>
+    <script src="/js/toast.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+
+</html>
