@@ -5,7 +5,7 @@
   // ---- Auth guard ----
   const { data: sessionData } = await window.sb.auth.getSession();
   if (!sessionData.session) {
-    window.location.replace('/login.html');
+    window.location.replace('/index.html');
     return;
   }
   const user = sessionData.session.user;
@@ -74,7 +74,7 @@
   // ---- Sign out ----
   document.getElementById('logout-btn').addEventListener('click', async () => {
     await window.sb.auth.signOut();
-    window.location.replace('/login.html');
+    window.location.replace('/index.html');
   });
 
   // ---- Modal helpers ----
